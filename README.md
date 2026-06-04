@@ -9,6 +9,7 @@
 - 打开 BOSS 直聘登录页，并提示用户手动登录。
 - 让用户确认岗位关键词、城市、筛选条件、批量上限和打招呼话术。
 - 支持“用户手动搜索，agent 接管结果页”的稳定流程。
+- 在已验证 DOM 匹配时，可自动填写搜索关键词并点击 BOSS 页面自己的搜索按钮。
 - 从当前结果页提取可见岗位，保存为 JSON。
 - 通过 BOSS 网页上的可见按钮点击“立即沟通”。
 - 看到成功弹窗后记录为已沟通，并点击“留在此页”继续。
@@ -46,18 +47,21 @@ Use $boss-batch-apply to help me contact 20 BOSS jobs for "ai 应用开发" in �
 
 1. 让 agent 打开 BOSS 登录页。
 2. 用户手动登录。
-3. 如果自动搜索不稳定，用户手动搜索岗位和城市。
-4. 用户告诉 agent：“结果页好了”。
-5. agent 先只读提取当前可见岗位。
-6. 用户确认批量上限和规则。
-7. agent 逐个点击右侧详情页的“立即沟通”。
-8. 每次看到成功弹窗后记录结果并继续。
+3. agent 优先尝试自动填写岗位关键词并点击搜索。
+4. 如果自动搜索不稳定，用户手动搜索岗位和城市。
+5. 用户告诉 agent：“结果页好了”。
+6. agent 先只读提取当前可见岗位。
+7. 用户确认批量上限和规则。
+8. agent 逐个点击右侧详情页的“立即沟通”。
+9. 每次看到成功弹窗后记录结果并继续。
 
 ## 已实测的 BOSS 页面 DOM
 
 当前 skill 已记录 2026 年 BOSS 桌面网页里较稳定的一组 DOM 锚点：
 
 - 结果卡片容器：`.card-area .job-card-wrap`
+- 搜索输入框：`.job-search-form input.input`
+- 搜索按钮：`.job-search-form .search-btn[ka="job_search_btn_click"]`
 - 当前选中卡片：`.card-area .job-card-wrap.active .job-card-box`
 - 岗位名称：`.job-card-box .job-name`
 - 薪资：`.job-card-box .job-salary`

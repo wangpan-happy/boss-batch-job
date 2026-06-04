@@ -23,7 +23,7 @@ If a verification, login, or security prompt appears, stop immediately and ask t
    - Batch limit. Default to 20. Recommend not exceeding 50 in one session.
    - Greeting text or one of the presets in the workflow reference.
 5. Show the final search settings, greeting text, and batch limit. Ask for confirmation before contacting any job.
-6. Search and filter using the BOSS web UI after login.
+6. Search and filter using the BOSS web UI after login. If the tested search DOM matches, use the search automation guidance in `references/boss-workflow.md`; otherwise ask the user to search manually and continue from the result page.
 7. Run a dry extraction first when possible:
    - If page JavaScript execution is available, use `scripts/extract-visible-jobs.js` in page context.
    - Otherwise inspect visible cards with the browser tool.

@@ -52,6 +52,25 @@ Prefer visible UI operations:
 
 Do not call private BOSS APIs.
 
+### Tested Search DOM
+
+The tested 2026 desktop search bar uses:
+
+- Search container: `.expect-and-search`
+- Search form: `.job-search-form`
+- Search input: `.job-search-form input.input`
+- Map button: `.job-search-form .search-map-btn[ka="map_job_search_btn_click"]`
+- Search button: `.job-search-form .search-btn[ka="job_search_btn_click"]`
+
+To automate keyword search, set the input with the native `HTMLInputElement.prototype.value` setter, dispatch `input` and `change` events, then click the visible `.search-btn` using browser/mouse actions. After clicking, verify:
+
+- The URL includes the expected `query=...` parameter or the input value still matches the keyword.
+- The page still shows the expected city/region.
+- `.card-area .job-card-wrap` result cards are present.
+- No login, verification, operation-frequency, or risk prompt is visible.
+
+If search automation clears the keyword, reloads into the wrong city, returns an empty page, or triggers login/security prompts, stop and ask the user to search manually.
+
 ## Extract Visible Jobs
 
 If the browser agent can execute page JavaScript, paste or evaluate `scripts/extract-visible-jobs.js` in the page context. Save the returned JSON array to `visible-jobs.json`.
