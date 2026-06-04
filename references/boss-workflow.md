@@ -106,6 +106,18 @@ Use these anchors when the visible BOSS desktop UI matches the tested structure:
 
 Prefer the right-side detail chat button over searching the whole page for `立即沟通`. Record `contacted` only after `.greet-boss-container` appears, or after another visible state clearly proves the message was sent. If BOSS refreshes after contact, reconnect to the current page, verify the search result context is still correct, and continue from the next unrecorded card.
 
+### Stable Card Selection
+
+Do not rely on click coordinates alone when moving through the left-side job list. For each candidate:
+
+1. Read the card's `a[href*="/job_detail/"]` URL, title, and company before selecting it.
+2. Click the specific `.card-area .job-card-wrap` that contains that URL.
+3. Wait until the active card's detail URL matches the candidate URL.
+4. Read `.job-detail-header .job-name` and confirm it matches the candidate title.
+5. Only then click `.job-detail-header a.op-btn-chat[ka^="cpc_job_list_chat_"]`.
+
+If the active card URL or right-side title does not match, record `failed` for that candidate and stop instead of continuing to the next click. This prevents accidental outreach to a different job when the list scrolls or a click lands on a neighboring card.
+
 ## Filtering
 
 Filter by:
@@ -124,7 +136,7 @@ For each selected job:
 
 1. Bring the card into view.
 2. Open or focus the card.
-3. Confirm the page/card still shows the expected job title and company.
+3. Confirm the active card URL and right-side detail title match the selected job.
 4. Prefer the right-side detail button `.job-detail-header a.op-btn-chat[ka^="cpc_job_list_chat_"]`.
 5. If the button says `继续沟通`, record `already_contacted`.
 6. If the button says `立即沟通`, click it.
