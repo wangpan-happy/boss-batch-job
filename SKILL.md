@@ -34,6 +34,8 @@ If a verification, login, or security prompt appears, stop immediately and ask t
 
 Read `references/boss-workflow.md` before running a live session.
 
+If the user explicitly asks for higher speed by refreshing after each contact, use the refresh-fast mode in `references/boss-workflow.md` only after its no-contact double-refresh dry test succeeds. This mode still must wait for the success modal before recording `contacted`, and it still must stop on explicit verification, login, operation-frequency, account-abnormal, or risk-warning prompts.
+
 ## Greeting Copy
 
 Offer the editable presets from `references/boss-workflow.md`.
@@ -95,6 +97,7 @@ Use pacing for reliability and user control, not for hiding automation:
 
 - Default to a conservative 6-12 seconds between contact attempts.
 - If the user asks for faster mode, wait for the success modal or page refresh to settle, then wait 3-5 seconds before the next contact attempt.
+- If the user asks for refresh-fast mode, first run the no-contact double-refresh dry test in the workflow reference. If it passes, after each success modal: refresh the current search page, wait 2 seconds, refresh again, wait 2 seconds, then continue from the currently loaded detail panel.
 - Do not use sub-3-second rapid clicking. Stop if BOSS shows operation-frequency, risk, login, or verification prompts.
 - Pause every 10 contacts and summarize progress.
 - Ask again before exceeding 50 contacts.

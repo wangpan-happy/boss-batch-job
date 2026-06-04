@@ -118,6 +118,38 @@ Do not rely on click coordinates alone when moving through the left-side job lis
 
 If the active card URL or right-side title does not match, record `failed` for that candidate and stop instead of continuing to the next click. This prevents accidental outreach to a different job when the list scrolls or a click lands on a neighboring card.
 
+### Refresh-Fast Mode
+
+Use this mode only when the user explicitly asks to trade detail matching for speed. It is intended for result pages where contacted jobs disappear after a full page refresh.
+
+Before any live contact in this mode, run a no-contact double-refresh dry test:
+
+1. Start from the searched result page.
+2. Refresh the page.
+3. Wait 2 seconds.
+4. Refresh the page again.
+5. Wait 2 seconds.
+6. Confirm `.card-area .job-card-wrap` cards are present and the right-side detail chat button is present.
+
+If the dry test drops the `query` context, clears the card list, or leaves no right-side chat button, do not use refresh-fast mode in that session. Ask the user to restore the result page manually or fall back to stable card selection.
+
+Loop:
+
+1. Start from the current search result URL.
+2. Read the currently loaded right-side detail panel and its `.job-detail-header a.op-btn-chat[ka^="cpc_job_list_chat_"]` button.
+3. If the button says `继续沟通`, record `already_contacted`, refresh, and continue.
+4. If the button says `立即沟通`, click it.
+5. Wait for `.greet-boss-container` and record `contacted` only when the modal text confirms the message was sent.
+6. Refresh the current search result page.
+7. Wait 2 seconds.
+8. Refresh the page again.
+9. Wait 2 seconds.
+10. Continue from the currently loaded detail panel without doing the stable card URL/title match, but only if cards and the right-side chat button are present.
+
+In refresh-fast mode, do not treat ordinary job-description words such as `风险` or `频繁` as stop prompts by themselves. Stop only on explicit UI prompts such as `验证码`, `滑块`, `安全验证`, `操作频繁`, `频繁操作`, `账号异常`, `风险提示`, `请先登录`, `登录过期`, or `短信验证`.
+
+If the double refresh leaves no cards or no right-side chat button, wait one more 2-second settling interval and re-read once. If the page is still not actionable, stop and report the last visible state instead of guessing. Do not treat a blank result area as a successful refresh.
+
 ## Filtering
 
 Filter by:
@@ -142,7 +174,7 @@ For each selected job:
 6. If the button says `立即沟通`, click it.
 7. If `.greet-boss-container` appears, record `contacted`, then click `.greet-boss-container .cancel-btn` to stay on the result page.
 8. If no success modal appears, do not assume success. Re-read visible state; stop or record `failed` if confirmation is uncertain.
-9. Wait 6-12 seconds before the next job by default. In user-approved faster mode, wait for modal/refresh settlement plus 3-5 seconds.
+9. Wait 6-12 seconds before the next job by default. In user-approved faster mode, wait for modal/refresh settlement plus 3-5 seconds. In user-approved refresh-fast mode, use the double-refresh sequence above.
 
 Do not continue after unexpected prompts.
 
@@ -153,6 +185,7 @@ Stop and report immediately on:
 - Captcha, slider, SMS, login, or security verification.
 - Operation-frequency or risk warning.
 - Chinese warning text such as `操作频繁`, `账号异常`, `风险提示`, or equivalent prompts.
+- Avoid broad stop-word matches on normal job-description text. For example, `潜在风险` inside a job description is not a risk warning by itself.
 - Contact button missing on three consecutive selected cards.
 - Repeated page navigation failures.
 - User interruption.
