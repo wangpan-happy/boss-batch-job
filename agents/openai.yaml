@@ -1,0 +1,4 @@
+interface:
+  display_name: "BOSS Batch Apply"
+  short_description: "Browser-agent workflow for controlled BOSS batch outreach."
+  default_prompt: "Use $boss-batch-apply to help me run a controlled BOSS batch outreach session."
